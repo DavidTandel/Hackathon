@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import ExpenseSubmission from "./ExpenseSubmission";
 import ApprovalPage from "./ApprovalPage";
 import AdminSettings from "./AdminSettings";
+import RegisterPage from "./RegisterPage";
 import { RoleProvider } from "./RoleContext";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/submit-expense" element={<ExpenseSubmission />} />
           <Route path="/approve-expenses" element={<ApprovalPage />} />
