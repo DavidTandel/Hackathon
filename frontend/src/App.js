@@ -6,11 +6,13 @@ import ApprovalPage from "./ApprovalPage";
 import AdminSettings from "./AdminSettings";
 import RegisterPage from "./RegisterPage";
 import { RoleProvider } from "./RoleContext";
+import Navbar from "./Navbar";
 
 function App() {
   return (
     <RoleProvider>
       <Router>
+        <Navbar/>
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
