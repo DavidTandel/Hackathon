@@ -9,17 +9,38 @@ function LoginPage() {
   const [selectedRole, setSelectedRole] = useState("Employee");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Add authentication logic, API call here if needed
-    setRole(selectedRole);
-    navigate("/dashboard");
+    setError("");
+    try {
+      const response = await fetch("/api/login/", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          email,
+          password,
+          role: selectedRole
+        })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setRole(data.role);
+        navigate("/dashboard");
+      } else {
+        setError(data.error || "Login failed");
+      }
+    } catch {
+      setError("Network error");
+    }
   };
 
   const handleSignupClick = () => {
     navigate("/register");
   };
+
+  
 
   return (
     <div>
@@ -27,7 +48,7 @@ function LoginPage() {
       <form onSubmit={handleLogin}>
         <label>
           Role:
-          <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+          <select value={selectedRole} onChange={e => setSelectedRole(e.target.value)}>
             <option value="Admin">Admin</option>
             <option value="Manager">Manager</option>
             <option value="Employee">Employee</option>
@@ -48,10 +69,11 @@ function LoginPage() {
           onChange={e => setPassword(e.target.value)}
         />
         <button type="submit">Login</button>
+        {error && <div style={{ color: "red", marginTop: "8px" }}>{error}</div>}
       </form>
       <hr />
       <p>
-        Don't have an Admin account?{' '}
+        Don't have an Admin account?{" "}
         <button onClick={handleSignupClick}>Sign up as Admin</button>
       </p>
     </div>
