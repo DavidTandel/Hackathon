@@ -3,6 +3,9 @@ import uuid
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import AbstractUser
 
 # -- Company
@@ -17,12 +20,6 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.name} ({self.base_currency})"
 
-
-# -- User (custom, extends AbstractUser)
-import uuid
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-
 class User(AbstractUser):
     ROLE_ADMIN = "Admin"
     ROLE_MANAGER = "Manager"
@@ -32,7 +29,7 @@ class User(AbstractUser):
         (ROLE_MANAGER, "Manager"),
         (ROLE_EMPLOYEE, "Employee"),
     ]
-
+    email = models.EmailField(unique=True) 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company = models.ForeignKey(
         'Company', null=True, blank=True, on_delete=models.SET_NULL, related_name="users"
@@ -65,6 +62,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"
+
 
 # -- Currency rate cache
 class CurrencyRate(models.Model):
